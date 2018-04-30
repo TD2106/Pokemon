@@ -1,5 +1,8 @@
-from selenium.webdriver import Chrome, ChromeOptions
+import json
+
 from bs4 import BeautifulSoup
+from selenium.webdriver import Chrome, ChromeOptions
+
 from crawler.bulbagarden_crawler import BulbGardenCrawler
 
 
@@ -17,6 +20,7 @@ class PokedexCrawler:
     def get_pokemon(self):
         self.bulb_garden_crawler.get_page()
         pokemon_url = "https://www.pokedex.org/#/pokemon/"
+        pokemons = []
         for i in range(1, self.number_of_pokemon + 1):
             print("Downloading pokemon: id = " + str(i))
             pokemon_information = {}
@@ -31,7 +35,7 @@ class PokedexCrawler:
             pokemon_information["types"] = types
             for row in soup.find_all("div", {"class": "detail-stats-row"}):
                 stat_name = row.find("span").text
-                stat_name = "base_"+stat_name.lower().replace(" ", "_")
+                stat_name = "current_" + stat_name.lower().replace(" ", "_")
                 pokemon_information[stat_name] = int(row.find("div", {"class": "stat-bar-fg"}).text)
             attack_dmg_multiplier = {}
             for row in soup.find_all("div", {"class": "when-attacked-row"}):
@@ -43,7 +47,12 @@ class PokedexCrawler:
                     row.find("span", {"class": "monster-multiplier"}).decompose()
             pokemon_information["attack_dmg_multiplier"] = attack_dmg_multiplier
             pokemon_information["base_exp"] = self.bulb_garden_crawler.get_base_exp(i)
+            pokemon_information["current_exp"] = pokemon_information["base_exp"]
+            pokemon_information["current_level"] = 1
+            pokemons.append(pokemon_information)
             print("Download complete")
+        with open("../json/PokemonBase.json", "w") as file:
+            json.dump(pokemons, file, indent=2)
         self.browser.quit()
 
 test = PokedexCrawler()
