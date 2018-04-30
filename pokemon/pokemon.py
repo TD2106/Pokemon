@@ -1,7 +1,17 @@
+import json
 import random
 
 
 class Pokemon:
+    @staticmethod
+    def get_all_base_pokemon():
+        with open("../json/PokemonBase.json", "r") as file:
+            pokemon_dicts = json.load(file)
+        pokemons = []
+        for dict in pokemon_dicts:
+            pokemons.append(Pokemon(dict))
+        return pokemons
+
     def __init__(self, poke_info):
         self.info = poke_info
         self.ev = round(random.uniform(0.5, 1), 2)
@@ -54,3 +64,8 @@ class Pokemon:
 
     def prepare_for_storing(self):
         self.info.pop("current_battle_hp", None)
+
+
+pokemons = Pokemon.get_all_base_pokemon()
+for i in range(0, 2):
+    print(pokemons[i].get_info())
