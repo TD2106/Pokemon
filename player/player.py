@@ -31,7 +31,8 @@ class Player:
             return True
 
     def __init__(self, user_name):
-        with open("../json/" + user_name + ".json", "r") as user_json:
+        self.json_path = "../json/" + user_name + ".json"
+        with open(self.json_path, "r") as user_json:
             self.player_info = json.load(user_json)
 
     def add_pokemon(self, pokemon):

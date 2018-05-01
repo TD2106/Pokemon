@@ -46,10 +46,10 @@ class Pokemon:
     def attack_other_pokemon(self, other):
         attack_type = random.randint(0, 1)
         if attack_type == 0:
-            dmg = min(0, self.info["current_attack"] - other.info["current_defense"])
+            dmg = max(0, self.info["current_attack"] - other.info["current_defense"])
             other.take_damage(dmg)
         else:
-            dmg = min(0,
+            dmg = max(0,
                       int(self.info["current_sp_atk"] * self.get_max_multiplier(other)) - other.info["current_sp_def"])
             other.take_damage(dmg)
 
@@ -66,6 +66,3 @@ class Pokemon:
         self.info.pop("current_battle_hp", None)
 
 
-pokemons = Pokemon.get_all_base_pokemon()
-for i in range(0, 2):
-    print(pokemons[i].get_info())
