@@ -13,27 +13,31 @@ class PokeCat:
         self.ip_players = {}
         self.world_size = 1000
         self.world_map = [[0 for x in range(self.world_size)] for y in range(self.world_size)]
-        self.pokemon_locations = []
-        self.number_of_spawn = 300
+        self.pokemon_locations = set()
+        self.number_of_spawn = 1000
         self.number_of_pokemon = number_of_pokemon
         self.pokemons = pokemons
         self.player_locations = {}
         self.mini_map_radius = 3
-        self.pokemon_live_time = 120
+        self.pokemon_live_time = 600
 
     def spawn(self):
+        print("Spawning pokemon")
         while len(self.pokemon_locations) < self.number_of_spawn:
-            x = randint(0, self.world_size)
-            y = randint(0, self.world_size)
+            x = randint(0, self.world_size - 1)
+            y = randint(0, self.world_size - 1)
             if (x, y) not in self.pokemon_locations:
-                self.pokemon_locations.append((x, y))
+                self.pokemon_locations.add((x, y))
                 id = randint(1, self.number_of_pokemon + 1)
                 self.world_map[x][y] = id
+        print("Spawning done")
 
     def despawn(self):
+        print("Despawning pokemon")
         while len(self.pokemon_locations) > 0:
             location = self.pokemon_locations.pop()
             self.world_map[location[0]][location[1]] = 0
+        print("Despawning done")
 
     def is_player_not_in_location(self, location):
         for key, value in self.player_locations.items():
@@ -61,24 +65,26 @@ class PokeCat:
         x = self.player_locations[address][0]
         y = self.player_locations[address][1]
         if move == 'a':
-            x -= 1
-        elif move == 's':
-            y += 1
-        elif move == 'd':
-            x += 1
-        elif move == 'w':
             y -= 1
+        elif move == 's':
+            x += 1
+        elif move == 'd':
+            y += 1
+        elif move == 'w':
+            x -= 1
+        else:
+            return "Invalid move"
         if not self.is_valid((x, y)):
             return "Can't move to location outside of the map"
         if self.is_player_not_in_location((x, y)):
             self.player_locations[address] = (x, y)
             if self.world_map[x][y] != 0:
                 self.ip_players[address].add_pokemon(self.pokemons[self.world_map[x][y] - 1])
-                result = "You are at location " + str((x, y)) + "and captured " + \
+                result = "You move to location " + str((x, y)) + "and captured " + \
                          str(self.pokemons[self.world_map[x][y] - 1].info["name"])
                 self.world_map[x][y] = 0
             else:
-                result = "You are at location " + str((x, y))
+                result = "You move location " + str((x, y))
         else:
             result = "Can't move to location. Occupied by other players"
         return result
@@ -88,7 +94,7 @@ class PokeCat:
         x2 = min(self.world_size - 1, self.player_locations[address][0] + self.mini_map_radius)
         y1 = max(0, self.player_locations[address][1] - self.mini_map_radius)
         y2 = min(self.world_size - 1, self.player_locations[address][1] + self.mini_map_radius)
-        result = "You are at " + self.player_locations[address] + "\n"
+        result = "You are at " + str(self.player_locations[address]) + "\n"
         for i in range(x1, x2 + 1):
             for j in range(y1, y2 + 1):
                 if (i, j) == self.player_locations[address]:
@@ -105,13 +111,17 @@ class PokeCat:
             next_spawn = time.time() + self.pokemon_live_time
             self.spawn()
             while time.time() < next_spawn:
-                pass
+                # for i in range(0,20):
+                #     for j in range(0,20):
+                #         print(self.world_map[i][j], end=" ")
+                #     print()
+                # print("\n")
+                time.sleep(30)
             self.despawn()
 
     def execute_game(self):
         thread1 = Thread(target=self.allocate_pokemon, args=())
         thread1.start()
-        thread1.join()
         while True:
             data, address = receive_message(sock=self.sock)
             if data == "quit":

@@ -1,11 +1,14 @@
 import json
+import os
 import random
+
+path = os.getcwd()
 
 
 class Pokemon:
     @staticmethod
     def get_all_base_pokemon():
-        with open("../json/PokemonBase.json", "r") as file:
+        with open(str(path) + "\\json" + "\\" + "PokemonBase.json", "r") as file:
             pokemon_dicts = json.load(file)
         pokemons = []
         for dict in pokemon_dicts:
