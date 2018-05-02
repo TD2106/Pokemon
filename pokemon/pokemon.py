@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import random
@@ -7,18 +8,14 @@ path = os.getcwd()
 
 class Pokemon:
     @staticmethod
-    def get_all_base_pokemon():
+    def get_all_base_pokemon_dicts():
         with open(str(path) + "\\json" + "\\" + "PokemonBase.json", "r") as file:
             pokemon_dicts = json.load(file)
-        pokemons = []
-        for dict in pokemon_dicts:
-            pokemons.append(Pokemon(dict))
-        return pokemons
+        return pokemon_dicts
 
     def __init__(self, poke_info):
-        self.info = poke_info
+        self.info = copy.deepcopy(poke_info)
         self.ev = round(random.uniform(0.5, 1), 2)
-        self.info["current_battle_hp"] = self.info["current_hp"]
 
     def level_up(self):
         while self.info["base_exp"] * 2 <= self.info["current_exp"]:
@@ -65,7 +62,8 @@ class Pokemon:
             result = 1.0
         return result
 
+    def prepare_battle(self):
+        self.info["current_battle_hp"] = self.info["current_hp"]
+
     def prepare_for_storing(self):
         self.info.pop("current_battle_hp", None)
-
-

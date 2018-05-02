@@ -1,6 +1,9 @@
+import copy
 import json
 import os
 from pathlib import Path
+
+from pokemon.pokemon import Pokemon
 
 path = os.getcwd()
 
@@ -25,19 +28,24 @@ class Player:
 
     @staticmethod
     def add_user(user_name, password):
-        if Player.is_user_name_exist(user_name):
-            return False
-        else:
-            player_info = dict(user_name=user_name, password=password, pokemons=[])
-            with open(str(path) + "\\json" + "\\" + user_name + ".json", "w") as user_json:
-                json.dump(player_info, user_json, indent=2)
-            return True
+        player_info = dict(user_name=user_name, password=password, pokemons_info=[])
+        with open(str(path) + "\\json" + "\\" + user_name + ".json", "w") as user_json:
+            json.dump(player_info, user_json, indent=2)
 
     def __init__(self, user_name):
         self.json_path = str(path) + "\\json" + "\\" + user_name + ".json"
         with open(self.json_path, "r") as user_json:
             self.player_info = json.load(user_json)
 
-    def add_pokemon(self, pokemon):
-        self.player_info["pokemons"].append(pokemon)
+    def add_pokemon(self, pokemon_info):
+        self.player_info["pokemons_info"].append(copy.deepcopy(pokemon_info))
 
+    def prepare_for_battle(self):
+        self.player_info["pokemons"] = []
+        for pokemon_info in self.player_info["pokemons_info"]:
+            self.player_info["pokemons"].append(Pokemon(pokemon_info))
+
+    def save_progress_pokecat(self):
+        self.player_info.pop("pokemons", None)
+        with open(self.json_path, "w") as user_json:
+            json.dump(self.player_info, user_json, indent=2)

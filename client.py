@@ -44,7 +44,12 @@ if option == '1':
             if command == "quit" or re.match("^[awsd]$", command):
                 break
         send_message(command, ("localhost", pokecat_port), sock)
-        result = receive_message(sock)[0]
-        print(result)
-        mini_map = receive_message(sock)[0]
-        print(mini_map)
+        if command != "quit":
+            result = receive_message(sock)[0]
+            print(result)
+            mini_map = receive_message(sock)[0]
+            print(mini_map)
+        else:
+            result = receive_message(sock)[0]
+            print(result)
+            break

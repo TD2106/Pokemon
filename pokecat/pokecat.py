@@ -8,15 +8,15 @@ from player.player import Player
 
 
 class PokeCat:
-    def __init__(self, sock, number_of_pokemon, pokemons):
+    def __init__(self, sock, number_of_pokemon, pokemons_dicts):
         self.sock = sock
         self.ip_players = {}
         self.world_size = 1000
         self.world_map = [[0 for x in range(self.world_size)] for y in range(self.world_size)]
         self.pokemon_locations = set()
-        self.number_of_spawn = 1000
+        self.number_of_spawn = 50000
         self.number_of_pokemon = number_of_pokemon
-        self.pokemons = pokemons
+        self.pokemons_dicts = pokemons_dicts
         self.player_locations = {}
         self.mini_map_radius = 3
         self.pokemon_live_time = 600
@@ -79,9 +79,9 @@ class PokeCat:
         if self.is_player_not_in_location((x, y)):
             self.player_locations[address] = (x, y)
             if self.world_map[x][y] != 0:
-                self.ip_players[address].add_pokemon(self.pokemons[self.world_map[x][y] - 1])
+                self.ip_players[address].add_pokemon(self.pokemons_dicts[self.world_map[x][y] - 1])
                 result = "You move to location " + str((x, y)) + "and captured " + \
-                         str(self.pokemons[self.world_map[x][y] - 1].info["name"])
+                         str(self.pokemons_dicts[self.world_map[x][y] - 1]["name"])
                 self.world_map[x][y] = 0
             else:
                 result = "You move location " + str((x, y))
@@ -125,6 +125,8 @@ class PokeCat:
         while True:
             data, address = receive_message(sock=self.sock)
             if data == "quit":
+                self.ip_players[address].save_progress_pokecat()
+                send_message("Save success", address, self.sock)
                 self.ip_players.pop(address, None)
                 self.player_locations.pop(address, None)
             elif re.match('^[asdw]$', data):
