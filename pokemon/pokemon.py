@@ -18,12 +18,12 @@ class Pokemon:
     def level_up(self):
         while self.info["base_exp"] * 2 <= self.info["current_exp"]:
             self.info["base_exp"] *= 2
-            self.info["level"] += 1
+            self.info["current_level"] += 1
             self.info["current_hp"] = int((1 + self.info["EV"]) * self.info["current_hp"])
             self.info["current_attack"] = int((1 + self.info["EV"]) * self.info["current_attack"])
             self.info["current_defense"] = int((1 + self.info["EV"]) * self.info["current_defense"])
-            self.info["current_sp_attack"] = int((1 + self.info["EV"]) * self.info["current_sp_attack"])
-            self.info["current_sp_defense"] = int((1 + self.info["EV"]) * self.info["current_sp_defense"])
+            self.info["current_sp_atk"] = int((1 + self.info["EV"]) * self.info["current_sp_atk"])
+            self.info["current_sp_def"] = int((1 + self.info["EV"]) * self.info["current_sp_def"])
 
     def add_exp(self, added_exp):
         self.info["current_exp"] += added_exp
@@ -50,8 +50,8 @@ class Pokemon:
         else:
             dmg = max(0,
                       int(self.info["current_sp_atk"] * self.get_max_multiplier(other)) - other.info["current_sp_def"])
-            return dmg
             other.take_damage(dmg)
+            return dmg
 
     def get_max_multiplier(self, other):
         result = 0.0

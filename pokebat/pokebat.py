@@ -3,14 +3,14 @@ from pokemon.pokemon import Pokemon
 
 
 class PokebatRoom:
-    def __init__(self, player_one, player_two, sock, player_one_address, player_two_address):
+    def __init__(self, player_one, player_two, sock, player_one_address, player_two_address, ):
         self.players = []
         self.players_address = []
         self.players.append(player_one)
         self.players.append(player_two)
         self.sock = sock
-        self.players_address.append(player_one)
-        self.players_address.append(player_two)
+        self.players_address.append(player_one_address)
+        self.players_address.append(player_two_address)
 
     def check_lost(self, chosen_pokemons):
         for pokemon in chosen_pokemons:
@@ -31,34 +31,35 @@ class PokebatRoom:
 
     def battle_preparation(self, player_chosen_pokemons):
         for i in range(0, 2):
-            send_message(message=str(len(self.players[i].info["pokemons_info"])), address=self.players_address[i],
+            send_message(message=str(len(self.players[i].player_info["pokemons_info"])),
+                         address=self.players_address[i],
                          sock=self.sock)
             send_message(message=self.players[i].get_pokemon_info(), address=self.players_address[i], sock=self.sock)
         count = 0
         while count < 2:
             data, address = receive_message(self.sock)
-            index = [int(x) for x in data.split(" ")]
+            index = [int(x) for x in data.split()]
             pokemons = []
             if address == self.players_address[0]:
                 for i in index:
-                    pokemon = Pokemon(self.players[0].info["pokemons_info"][i])
+                    pokemon = Pokemon(self.players[0].player_info["pokemons_info"][i])
                     pokemon.prepare_battle()
                     pokemons.append(pokemon)
                 player_chosen_pokemons[0] = pokemons
             else:
                 for i in index:
-                    pokemon = Pokemon(self.players[1].info["pokemons_info"][i])
+                    pokemon = Pokemon(self.players[1].player_info["pokemons_info"][i])
                     pokemon.prepare_battle()
                     pokemons.append(pokemon)
                 player_chosen_pokemons[1] = pokemons
             count += 1
-        player_chosen_pokemons[0].sort(key=lambda k: k['current_speed'], reverse=True)
-        player_chosen_pokemons[1].sort(key=lambda k: k['current_speed'], reverse=True)
+        player_chosen_pokemons[0].sort(key=lambda k: k.info['current_speed'], reverse=True)
+        player_chosen_pokemons[1].sort(key=lambda k: k.info['current_speed'], reverse=True)
 
     def get_switchable_pokemons(self, player_chosen_pokemons, player_turn):
         result = ""
         for i in range(1, 3):
-            if not player_chosen_pokemons[player_turn][i].check_lost():
+            if not player_chosen_pokemons[player_turn][i].is_lost():
                 result += "Enter " + str(i) + " to switch with " + player_chosen_pokemons[player_turn][i].info[
                     "name"] + ".\n"
         if result == "":
@@ -92,7 +93,7 @@ class PokebatRoom:
             command = receive_message(self.sock)[0]
             if command == 'attack':
                 dmg = player_chosen_pokemons[player_turn][0].attack_other_pokemon(player_chosen_pokemons[opponent][0])
-                send_message("You caused + " + str(dmg) + " to opponent current pokemon",
+                send_message("You caused " + str(dmg) + " to opponent current pokemon",
                              self.players_address[player_turn], self.sock)
                 send_message("Your current pokemon received a damage of " + str(dmg),
                              self.players_address[opponent], self.sock)
@@ -121,3 +122,12 @@ class PokebatRoom:
         while not self.check_lost(player_chosen_pokemons[0]) and not self.check_lost(player_chosen_pokemons[1]):
             self.play_turn(turn % 2, player_chosen_pokemons)
             turn += 1
+        if self.check_lost(player_chosen_pokemons[0]):
+            self.end_game(player_chosen_pokemons[1], player_chosen_pokemons[0])
+            send_message("You won", self.players_address[1], self.sock)
+            send_message("You lost", self.players_address[0], self.sock)
+        else:
+            self.end_game(player_chosen_pokemons[0], player_chosen_pokemons[1])
+            send_message("You won", self.players_address[0], self.sock)
+            send_message("You lost", self.players_address[1], self.sock)
+        self.sock.close()
