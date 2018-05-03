@@ -125,7 +125,7 @@ class PokeCat:
         while True:
             data, address = receive_message(sock=self.sock)
             if data == "quit":
-                self.ip_players[address].save_progress_pokecat()
+                self.ip_players[address].save_progress()
                 send_message("Save success", address, self.sock)
                 self.ip_players.pop(address, None)
                 self.player_locations.pop(address, None)

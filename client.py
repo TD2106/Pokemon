@@ -7,7 +7,7 @@ from network.network_communication import send_message, receive_message
 
 listening_port = 100
 pokecat_port = 101
-pokebat_port = 102
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = randint(0, 65535)
 try:

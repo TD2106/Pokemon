@@ -10,8 +10,6 @@ from pokemon.pokemon import Pokemon
 
 listening_port = 100
 pokecat_port = 101
-pokebat_port = 102
-
 
 def handle_client_verification(private_socket, client_address):
     option = receive_message(private_socket)[0]
@@ -48,6 +46,7 @@ def handle_client_verification(private_socket, client_address):
         pass
     elif option == '3':
         pass
+    private_socket.close()
 
 
 listening_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP

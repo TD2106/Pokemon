@@ -1,10 +1,8 @@
 import copy
 import json
 import os
+import random
 from pathlib import Path
-
-from pokemon.pokemon import Pokemon
-
 path = os.getcwd()
 
 
@@ -38,14 +36,25 @@ class Player:
             self.player_info = json.load(user_json)
 
     def add_pokemon(self, pokemon_info):
-        self.player_info["pokemons_info"].append(copy.deepcopy(pokemon_info))
+        pokemon_info_copy = copy.deepcopy(pokemon_info)
+        pokemon_info_copy["EV"] = round(random.uniform(0.5, 1), 2)
+        self.player_info["pokemons_info"].append(pokemon_info_copy)
 
-    def prepare_for_battle(self):
-        self.player_info["pokemons"] = []
-        for pokemon_info in self.player_info["pokemons_info"]:
-            self.player_info["pokemons"].append(Pokemon(pokemon_info))
-
-    def save_progress_pokecat(self):
-        self.player_info.pop("pokemons", None)
+    def save_progress(self):
         with open(self.json_path, "w") as user_json:
             json.dump(self.player_info, user_json, indent=2)
+
+    def get_pokemon_info(self):
+        result = "Your pokemons are:\n"
+        result += json.dumps(self.player_info["pokemons_info"], indent=2)
+        return result
+
+    def get_number_of_each_pokemon(self):
+        pokemon_count = {}
+        for info in self.player_info["pokemons_info"]:
+            if info["name"] in pokemon_count:
+                pokemon_count[info["name"]] += 1
+            else:
+                pokemon_count[info["name"]] = 1
+        for key, value in pokemon_count.items():
+            print(key + ":" + str(value))

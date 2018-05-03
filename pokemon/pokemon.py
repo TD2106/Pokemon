@@ -1,4 +1,3 @@
-import copy
 import json
 import os
 import random
@@ -14,18 +13,17 @@ class Pokemon:
         return pokemon_dicts
 
     def __init__(self, poke_info):
-        self.info = copy.deepcopy(poke_info)
-        self.ev = round(random.uniform(0.5, 1), 2)
+        self.info = poke_info
 
     def level_up(self):
         while self.info["base_exp"] * 2 <= self.info["current_exp"]:
             self.info["base_exp"] *= 2
             self.info["level"] += 1
-            self.info["current_hp"] = int((1 + self.ev) * self.info["current_hp"])
-            self.info["current_attack"] = int((1 + self.ev) * self.info["current_attack"])
-            self.info["current_defense"] = int((1 + self.ev) * self.info["current_defense"])
-            self.info["current_sp_attack"] = int((1 + self.ev) * self.info["current_sp_attack"])
-            self.info["current_sp_defense"] = int((1 + self.ev) * self.info["current_sp_defense"])
+            self.info["current_hp"] = int((1 + self.info["EV"]) * self.info["current_hp"])
+            self.info["current_attack"] = int((1 + self.info["EV"]) * self.info["current_attack"])
+            self.info["current_defense"] = int((1 + self.info["EV"]) * self.info["current_defense"])
+            self.info["current_sp_attack"] = int((1 + self.info["EV"]) * self.info["current_sp_attack"])
+            self.info["current_sp_defense"] = int((1 + self.info["EV"]) * self.info["current_sp_defense"])
 
     def add_exp(self, added_exp):
         self.info["current_exp"] += added_exp
