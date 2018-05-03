@@ -46,9 +46,11 @@ class Pokemon:
         if attack_type == 0:
             dmg = max(0, self.info["current_attack"] - other.info["current_defense"])
             other.take_damage(dmg)
+            return dmg
         else:
             dmg = max(0,
                       int(self.info["current_sp_atk"] * self.get_max_multiplier(other)) - other.info["current_sp_def"])
+            return dmg
             other.take_damage(dmg)
 
     def get_max_multiplier(self, other):

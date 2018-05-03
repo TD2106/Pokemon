@@ -55,3 +55,48 @@ class PokebatRoom:
             count += 1
         player_one_chosen_pokemons.sort(key=lambda k: k['current_speed'], reverse=True)
         player_two_chosen_pokemons.sort(key=lambda k: k['current_speed'], reverse=True)
+        while True:
+            send_message("Your turn", self.player_one_address, self.sock)
+            send_message("Your opponent's turn", self.player_two_address, self.sock)
+            send_message("Your current pokemon is: " + player_one_chosen_pokemons[0].info["name"],
+                         self.player_one_address, self.sock)
+            send_message("Your current pokemon is: " + player_two_chosen_pokemons[0].info["name"],
+                         self.player_two_address, self.sock)
+            send_message("The opponent current pokemon is: " + player_two_chosen_pokemons[0].info["name"],
+                         self.player_one_address, self.sock)
+            data = receive_message(self.sock)[0]
+            if data == 'attack':
+                dmg = player_one_chosen_pokemons[0].attack_other_pokemon(player_two_chosen_pokemons[0])
+                send_message("You caused + " + str(dmg) + " to opponent current pokemon", self.player_one_address,
+                             self.sock)
+                send_message("Your current pokemon received a damage of " + str(dmg), self.player_two_address,
+                             self.sock)
+            else:
+                send_message("Enter 1 to switch with " + player_one_chosen_pokemons[1].info["name"] +
+                             " or 2 to switch with " + player_one_chosen_pokemons[2].info["name"],
+                             self.player_one_address, self.sock)
+                index = int(receive_message(self.sock)[0])
+                player_one_chosen_pokemons[0], player_one_chosen_pokemons[index] = player_one_chosen_pokemons[index],
+                player_one_chosen_pokemons[0]
+            send_message("Your turn", self.player_two_address, self.sock)
+            send_message("Your opponent's turn", self.player_one_address, self.sock)
+            send_message("Your current pokemon is: " + player_one_chosen_pokemons[0].info["name"],
+                         self.player_one_address, self.sock)
+            send_message("Your current pokemon is: " + player_two_chosen_pokemons[0].info["name"],
+                         self.player_two_address, self.sock)
+            send_message("The opponent current pokemon is: " + player_one_chosen_pokemons[0].info["name"],
+                         self.player_two_address, self.sock)
+            data = receive_message(self.sock)[0]
+            if data == 'attack':
+                dmg = player_two_chosen_pokemons[0].attack_other_pokemon(player_one_chosen_pokemons[0])
+                send_message("You caused + " + str(dmg) + " to opponent current pokemon", self.player_two_address,
+                             self.sock)
+                send_message("Your current pokemon received a damage of " + str(dmg), self.player_one_address,
+                             self.sock)
+            else:
+                send_message("Enter 1 to switch with " + player_two_chosen_pokemons[1].info["name"] +
+                             " or 2 to switch with " + player_two_chosen_pokemons[2].info["name"],
+                             self.player_two_address, self.sock)
+                index = int(receive_message(self.sock)[0])
+                player_two_chosen_pokemons[0], player_two_chosen_pokemons[index] = player_two_chosen_pokemons[index],
+                player_two_chosen_pokemons[0]
