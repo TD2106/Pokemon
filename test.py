@@ -1,4 +1,5 @@
-from player.player import Player
+import queue
 
-test = Player("duy")
-print(test.get_pokemon_info())
+test = queue.Queue()
+test.put((1,))
+print(test.get()[0])

@@ -1,3 +1,4 @@
+import queue
 import re
 import time
 from random import randint
@@ -20,6 +21,7 @@ class PokeCat:
         self.player_locations = {}
         self.mini_map_radius = 3
         self.pokemon_live_time = 600
+        self.queue = queue.Queue()
 
     def spawn(self):
         print("Spawning pokemon")
@@ -109,19 +111,29 @@ class PokeCat:
     def allocate_pokemon(self):
         while True:
             next_spawn = time.time() + self.pokemon_live_time
-            self.spawn()
+            self.queue.put((1,))
             while time.time() < next_spawn:
-                # for i in range(0,20):
-                #     for j in range(0,20):
-                #         print(self.world_map[i][j], end=" ")
-                #     print()
-                # print("\n")
                 time.sleep(30)
-            self.despawn()
+            self.queue.put((2,))
+
+    def queue_handling(self):
+        while True:
+            if self.queue.not_empty:
+                tup = self.queue.get()
+                if tup[0] == 1:
+                    self.spawn()
+                elif tup[0] == 2:
+                    self.despawn()
+                elif tup[0] == 3:
+                    send_message(self.player_move(tup[2], tup[1]), tup[2], self.sock)
+                elif tup[0] == 4:
+                    send_message(self.player_status(tup[1]), tup[1], self.sock)
 
     def execute_game(self):
         thread1 = Thread(target=self.allocate_pokemon, args=())
         thread1.start()
+        thread2 = Thread(target=self.queue_handling, args=())
+        thread2.start()
         while True:
             data, address = receive_message(sock=self.sock)
             if data == "quit":
@@ -130,5 +142,5 @@ class PokeCat:
                 self.ip_players.pop(address, None)
                 self.player_locations.pop(address, None)
             elif re.match('^[asdw]$', data):
-                send_message(self.player_move(address, data), address, self.sock)
-                send_message(self.player_status(address), address, self.sock)
+                self.queue.put((3, data, address))
+                self.queue.put((4, address))
