@@ -76,7 +76,7 @@ class PokebatRoom:
         send_message("The opponent current pokemon is: " + player_chosen_pokemons[opponent][0].info["name"],
                      self.players_address[player_turn], self.sock)
         if player_chosen_pokemons[player_turn][0].is_lost():
-            send_message("You need to swich pokemon. Current one is dead.", self.players_address[player_turn],
+            send_message("You need to switch pokemon. Current one is dead.", self.players_address[player_turn],
                          self.sock)
             message = self.get_switchable_pokemons(player_chosen_pokemons, player_turn)
             send_message(message, self.players_address[player_turn], self.sock)
@@ -111,9 +111,6 @@ class PokebatRoom:
                     else:
                         send_message("Unsuccessful switch", self.players_address[player_turn], self.sock)
                 send_message("Your opponent choose switch", self.players_address[opponent], self.sock)
-
-
-
 
     def execute(self):
         player_chosen_pokemons = [None] * 2

@@ -3,6 +3,9 @@ import json
 import os
 import random
 from pathlib import Path
+
+from pokemon.pokemon import Pokemon
+
 path = os.getcwd()
 
 
@@ -56,5 +59,19 @@ class Player:
                 pokemon_count[info["name"]] += 1
             else:
                 pokemon_count[info["name"]] = 1
+        return pokemon_count
+
+    def merge_all_similar_pokemon(self, pokemon_count):
         for key, value in pokemon_count.items():
-            print(key + ":" + str(value))
+            if value >= 2:
+                first = True
+                pokemon = None
+                for info in self.player_info["pokemons_info"]:
+                    if first and info["name"] == key:
+                        pokemon = Pokemon(info)
+                        first = False
+                    elif info["name"] == key:
+                        pokemon.add_exp(info["current_exp"])
+                        pokemon.info["EV"] = max(pokemon.info["EV"], info["EV"])
+                        self.player_info["pokemons_info"].remove(info)
+        self.save_progress()

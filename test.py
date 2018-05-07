@@ -1,5 +1,4 @@
-import queue
+from player.player import Player
 
-test = queue.Queue()
-test.put((1,))
-print(test.get()[0])
+test = Player("duy")
+test.merge_all_similar_pokemon(test.get_number_of_each_pokemon())
