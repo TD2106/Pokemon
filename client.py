@@ -32,6 +32,10 @@ def pokecat_client():
 
 
 def pokebat_client():
+    data = receive_message(sock)[0]
+    print(data)
+    if data == "Not enough pokemon":
+        return
     print("Waiting for room...")
     number_of_poke, pokebat_server_address = receive_message(sock)
     number_of_poke = int(number_of_poke)
@@ -66,7 +70,11 @@ def pokebat_client():
             print(current_opponent_pokemon)
             command = receive_message(sock)[0]
             print(command)
-            if command == "You need to swich pokemon. Current one is dead.":
+            if command == "You need to switch pokemon. Current one is dead. Or you can quit":
+                command = input("Enter switch or quit: ")
+                send_message(command, pokebat_server_address, sock)
+                if command == "quit":
+                    continue
                 switchable = receive_message(sock)[0]
                 print(switchable)
                 swap_idx = input("Input the pokemon you want to swap: ")
@@ -74,7 +82,7 @@ def pokebat_client():
                 result = receive_message(sock)[0]
                 print(result)
             else:
-                move = input("Enter your move. attack or switch: ")
+                move = input("Enter your move: attack or switch or quit: ")
                 send_message(move, pokebat_server_address, sock)
                 if move == "switch":
                     switchable = receive_message(sock)[0]
@@ -83,9 +91,12 @@ def pokebat_client():
                     send_message(swap_idx, pokebat_server_address, sock)
                     result = receive_message(sock)[0]
                     print(result)
-                else:
+                elif move == "switch":
                     result = receive_message(sock)[0]
                     print(result)
+                else:
+                    continue
+
         elif turn == "Your opponent's turn":
             current_pokemon = receive_message(sock)[0]
             print(current_pokemon)

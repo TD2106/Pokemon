@@ -12,6 +12,7 @@ from pokemon.pokemon import Pokemon
 listening_port = 100
 pokecat_port = 101
 
+
 def handle_client_verification(private_socket, client_address):
     option = receive_message(private_socket)[0]
     if option == '1':
@@ -39,8 +40,13 @@ def handle_client_verification(private_socket, client_address):
     if option == '1':
         pokecat_instance.add_player(client_address, user_name)
     elif option == '2':
-        player_queue.put(Player(user_name))
-        player_address_queue.put(client_address)
+        player = Player(user_name)
+        if len(player.player_info["pokemons_info"]) >= 3:
+            send_message("In player queue", client_address, private_socket)
+            player_queue.put(Player(user_name))
+            player_address_queue.put(client_address)
+        else:
+            send_message("Not enough pokemon", client_address, private_socket)
     elif option == '3':
         pass
     private_socket.close()
