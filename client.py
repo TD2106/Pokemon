@@ -91,7 +91,7 @@ def pokebat_client():
                     send_message(swap_idx, pokebat_server_address, sock)
                     result = receive_message(sock)[0]
                     print(result)
-                elif move == "switch":
+                elif move == "attack":
                     result = receive_message(sock)[0]
                     print(result)
                 else:
