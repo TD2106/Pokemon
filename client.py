@@ -6,7 +6,7 @@ from network.network_communication import send_message, receive_message
 
 listening_port = 100
 pokecat_port = 101
-
+edit_port = 102
 
 def validate_input(prompt, possible_results):
     while True:
@@ -111,6 +111,18 @@ def pokebat_client():
             break
 
 
+def edit():
+    data = receive_message(sock)[0]
+    print(data)
+    data = receive_message(sock)[0]
+    print(data)
+    command = validate_input("Input merge to merge all similar pokemon for higher XP or quit: ", ["merge", "quit"])
+    send_message(command, ("localhost", edit_port), sock)
+    if command == "merge":
+        data = receive_message(sock)[0]
+        print(data)
+
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = randint(0, 65535)
 try:
@@ -140,5 +152,7 @@ if option == '1':
     pokecat_client()
 elif option == '2':
     pokebat_client()
+elif option == '3':
+    edit()
 elif option == 'quit':
     pass

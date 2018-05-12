@@ -54,12 +54,15 @@ class Player:
 
     def get_number_of_each_pokemon(self):
         pokemon_count = {}
+        result = ""
         for info in self.player_info["pokemons_info"]:
             if info["name"] in pokemon_count:
                 pokemon_count[info["name"]] += 1
             else:
                 pokemon_count[info["name"]] = 1
-        return pokemon_count
+        for key, value in pokemon_count.items():
+            result += key + ":" + str(value) + "\n"
+        return pokemon_count, result
 
     def merge_all_similar_pokemon(self, pokemon_count):
         for key, value in pokemon_count.items():

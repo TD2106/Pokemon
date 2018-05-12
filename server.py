@@ -4,6 +4,7 @@ from random import randint
 from threading import Thread
 
 from network.network_communication import send_message, receive_message
+from player.edit_profile import EditPlayerProfile
 from player.player import Player
 from pokebat.pokebat import PokebatRoom
 from pokecat.pokecat import PokeCat
@@ -11,7 +12,7 @@ from pokemon.pokemon import Pokemon
 
 listening_port = 100
 pokecat_port = 101
-
+edit_profile_port = 102
 
 def handle_client_verification(private_socket, client_address):
     option = receive_message(private_socket)[0]
@@ -48,7 +49,7 @@ def handle_client_verification(private_socket, client_address):
         else:
             send_message("Not enough pokemon", client_address, private_socket)
     elif option == '3':
-        pass
+        edit_room.add_player(client_address, user_name)
     private_socket.close()
 
 
@@ -73,14 +74,19 @@ player_queue = queue.Queue()
 player_address_queue = queue.Queue()
 listening_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 pokecat_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+edit_profile_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 listening_sock.bind(("localhost", listening_port))
 pokecat_sock.bind(("localhost", pokecat_port))
+edit_profile_sock.bind(("localhost", edit_profile_port))
 pokemons_dicts = Pokemon.get_all_base_pokemon_dicts()
 pokecat_instance = PokeCat(pokecat_sock, len(pokemons_dicts), pokemons_dicts)
 pokecat_thread = Thread(target=pokecat_instance.execute_game, args=())
 pokecat_thread.start()
 pokebat_thread = Thread(target=handle_player_queue_for_pokebat, args=())
 pokebat_thread.start()
+edit_room = EditPlayerProfile(edit_profile_sock)
+edit_thread = Thread(target=edit_room.listen, args=())
+edit_thread.start()
 print("Server started on port 100")
 while True:
     data, address = receive_message(listening_sock)
