@@ -1,4 +1,3 @@
-import re
 import socket
 import sys
 from random import randint
@@ -9,16 +8,22 @@ listening_port = 100
 pokecat_port = 101
 
 
+def validate_input(prompt, possible_results):
+    while True:
+        command = input(prompt)
+        if command not in possible_results:
+            print("Invalid input. Please input again")
+        else:
+            return command
+
+
 def pokecat_client():
     print("Welcome to pokecat. You can travel using keys: a w s d for left, up, down, right.\n"
           "You are the X in the mini-map, O are pokemons. Input quit to quit game.")
     mini_map = receive_message(sock)[0]
     print(mini_map)
     while True:
-        while True:
-            command = input("")
-            if command == "quit" or re.match("^[awsd]$", command):
-                break
+        command = validate_input("", ["quit", "a", "w", "s", "d"])
         send_message(command, ("localhost", pokecat_port), sock)
         if command != "quit":
             result = receive_message(sock)[0]
@@ -71,27 +76,27 @@ def pokebat_client():
             command = receive_message(sock)[0]
             print(command)
             if command == "You need to switch pokemon. Current one is dead. Or you can quit":
-                command = input("Enter switch or quit: ")
+                command = validate_input("Enter quit or attack: ", ["quit", "switch"])
                 send_message(command, pokebat_server_address, sock)
                 if command == "quit":
                     continue
                 switchable = receive_message(sock)[0]
                 print(switchable)
-                swap_idx = input("Input the pokemon you want to swap: ")
+                swap_idx = validate_input("Input the pokemon you want to swap: ", ["1", "2"])
                 send_message(swap_idx, pokebat_server_address, sock)
                 result = receive_message(sock)[0]
                 print(result)
             else:
-                move = input("Enter your move: attack or switch or quit: ")
-                send_message(move, pokebat_server_address, sock)
-                if move == "switch":
+                command = validate_input("Enter your command: attack or switch or quit: ", ["attack", "quit", "switch"])
+                send_message(command, pokebat_server_address, sock)
+                if command == "switch":
                     switchable = receive_message(sock)[0]
                     print(switchable)
-                    swap_idx = input("Input the pokemon you want to swap: ")
+                    swap_idx = swap_idx = validate_input("Input the pokemon you want to swap: ", ["1", "2"])
                     send_message(swap_idx, pokebat_server_address, sock)
                     result = receive_message(sock)[0]
                     print(result)
-                elif move == "attack":
+                elif command == "attack":
                     result = receive_message(sock)[0]
                     print(result)
                 else:
@@ -118,7 +123,7 @@ send_message("Please provide socket", ("localhost", listening_port), sock)
 data = receive_message(sock)[0]
 verification_port = int(data)
 server_address = ("localhost", verification_port)
-option = input("1 for register. 2 for login: ")
+option = validate_input("1 for register. 2 for login: ", ["1", "2"])
 send_message(option, ("localhost", verification_port), sock)
 while True:
     user_name = input("Input user name: ")
@@ -129,7 +134,7 @@ while True:
     print(respond)
     if respond == "Success":
         break
-option = input("1 for pokecat. 2 for pokebat. 3 for something. quit for exit: ")
+option = validate_input("1 for pokecat. 2 for pokebat. 3 for something. quit for exit: ", ["1", "2", "3", "quit"])
 send_message(option, ("localhost", verification_port), sock)
 if option == '1':
     pokecat_client()
