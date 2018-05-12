@@ -146,7 +146,7 @@ while True:
     print(respond)
     if respond == "Success":
         break
-option = validate_input("1 for pokecat. 2 for pokebat. 3 for something. quit for exit: ", ["1", "2", "3", "quit"])
+option = validate_input("1 for pokecat. 2 for pokebat. 3 for edit profile. quit for exit: ", ["1", "2", "3", "quit"])
 send_message(option, ("localhost", verification_port), sock)
 if option == '1':
     pokecat_client()
