@@ -1,0 +1,129 @@
+{
+  "user_name": "duy1",
+  "password": "123",
+  "pokemons_info": [
+    {
+      "id": 631,
+      "name": "Heatmor",
+      "types": [
+        "fire"
+      ],
+      "current_hp": 159,
+      "current_attack": 182,
+      "current_defense": 124,
+      "current_speed": 65,
+      "current_sp_atk": 197,
+      "current_sp_def": 124,
+      "attack_dmg_multiplier": {
+        "water": 2.0,
+        "fairy": 0.5,
+        "rock": 2.0,
+        "ice": 0.5,
+        "ground": 2.0,
+        "fire": 0.5,
+        "steel": 0.5
+      },
+      "base_exp": 338,
+      "current_exp": 584,
+      "current_level": 2,
+      "EV": 0.88
+    },
+    {
+      "id": 491,
+      "name": "Darkrai",
+      "types": [
+        "dark"
+      ],
+      "current_hp": 134,
+      "current_attack": 172,
+      "current_defense": 172,
+      "current_speed": 125,
+      "current_sp_atk": 259,
+      "current_sp_def": 172,
+      "attack_dmg_multiplier": {
+        "fairy": 2.0,
+        "dark": 0.5,
+        "bug": 2.0,
+        "ghost": 0.5,
+        "fighting": 2.0,
+        "psychic": 0.0
+      },
+      "base_exp": 540,
+      "current_exp": 685,
+      "current_level": 2,
+      "EV": 0.92
+    },
+    {
+      "id": 572,
+      "name": "Minccino",
+      "types": [
+        "normal"
+      ],
+      "current_hp": 145,
+      "current_attack": 132,
+      "current_defense": 105,
+      "current_speed": 75,
+      "current_sp_atk": 105,
+      "current_sp_def": 105,
+      "attack_dmg_multiplier": {
+        "fighting": 2.0,
+        "ghost": 0.0
+      },
+      "base_exp": 240,
+      "current_exp": 475,
+      "current_level": 3,
+      "EV": 0.63
+    },
+    {
+      "id": 298,
+      "name": "Hariyama",
+      "types": [
+        "fighting"
+      ],
+      "current_hp": 144,
+      "current_attack": 120,
+      "current_defense": 60,
+      "current_speed": 50,
+      "current_sp_atk": 40,
+      "current_sp_def": 60,
+      "attack_dmg_multiplier": {
+        "fairy": 2.0,
+        "dark": 0.5,
+        "psychic": 2.0,
+        "grass": 0.5,
+        "flying": 2.0,
+        "bug": 0.5,
+        "rock": 0.5
+      },
+      "base_exp": 38,
+      "current_exp": 38,
+      "current_level": 1,
+      "EV": 0.57
+    },
+    {
+      "id": 9,
+      "name": "Blastoise",
+      "types": [
+        "water"
+      ],
+      "current_hp": 79,
+      "current_attack": 83,
+      "current_defense": 100,
+      "current_speed": 78,
+      "current_sp_atk": 85,
+      "current_sp_def": 105,
+      "attack_dmg_multiplier": {
+        "electric": 2.0,
+        "ice": 0.5,
+        "grass": 2.0,
+        "water": 0.5,
+        "fire": 0.5,
+        "steel": 0.5
+      },
+      "base_exp": 239,
+      "current_exp": 239,
+      "current_level": 1,
+      "EV": 0.69
+    }
+  ]
+}

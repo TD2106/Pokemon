@@ -1,0 +1,134 @@
+{
+  "user_name": "duy",
+  "password": "123",
+  "pokemons_info": [
+    {
+      "id": 537,
+      "name": "Seismitoad",
+      "types": [
+        "water",
+        "ground"
+      ],
+      "current_hp": 205,
+      "current_attack": 186,
+      "current_defense": 147,
+      "current_speed": 74,
+      "current_sp_atk": 166,
+      "current_sp_def": 147,
+      "attack_dmg_multiplier": {
+        "grass": 4.0,
+        "fire": 0.5,
+        "electric": 2.0,
+        "steel": 0.5,
+        "rock": 0.5,
+        "ground": 0.5,
+        "poison": 0.5
+      },
+      "base_exp": 458,
+      "current_exp": 458,
+      "current_level": 2,
+      "EV": 0.96
+    },
+    {
+      "id": 245,
+      "name": "Entei",
+      "types": [
+        "fire"
+      ],
+      "current_hp": 115,
+      "current_attack": 115,
+      "current_defense": 85,
+      "current_speed": 100,
+      "current_sp_atk": 90,
+      "current_sp_def": 75,
+      "attack_dmg_multiplier": {
+        "water": 2.0,
+        "fairy": 0.5,
+        "rock": 2.0,
+        "ice": 0.5,
+        "ground": 2.0,
+        "fire": 0.5,
+        "steel": 0.5
+      },
+      "base_exp": 261,
+      "current_exp": 261,
+      "current_level": 1,
+      "EV": 0.78
+    },
+    {
+      "id": 120,
+      "name": "Staryu",
+      "types": [
+        "water"
+      ],
+      "current_hp": 30,
+      "current_attack": 45,
+      "current_defense": 55,
+      "current_speed": 85,
+      "current_sp_atk": 70,
+      "current_sp_def": 55,
+      "attack_dmg_multiplier": {
+        "electric": 2.0,
+        "ice": 0.5,
+        "grass": 2.0,
+        "water": 0.5,
+        "fire": 0.5,
+        "steel": 0.5
+      },
+      "base_exp": 68,
+      "current_exp": 68,
+      "current_level": 1,
+      "EV": 0.9
+    },
+    {
+      "id": 56,
+      "name": "Golduck",
+      "types": [
+        "water"
+      ],
+      "current_hp": 80,
+      "current_attack": 82,
+      "current_defense": 78,
+      "current_speed": 85,
+      "current_sp_atk": 95,
+      "current_sp_def": 80,
+      "attack_dmg_multiplier": {
+        "electric": 2.0,
+        "ice": 0.5,
+        "grass": 2.0,
+        "water": 0.5,
+        "fire": 0.5,
+        "steel": 0.5
+      },
+      "base_exp": 61,
+      "current_exp": 61,
+      "current_level": 1,
+      "EV": 0.61
+    },
+    {
+      "id": 558,
+      "name": "Crustle",
+      "types": [
+        "bug",
+        "rock"
+      ],
+      "current_hp": 70,
+      "current_attack": 95,
+      "current_defense": 125,
+      "current_speed": 45,
+      "current_sp_atk": 65,
+      "current_sp_def": 75,
+      "attack_dmg_multiplier": {
+        "rock": 2.0,
+        "poison": 0.5,
+        "water": 2.0,
+        "normal": 0.5,
+        "steel": 2.0
+      },
+      "base_exp": 170,
+      "current_exp": 170,
+      "current_level": 1,
+      "EV": 0.92
+    }
+  ]
+}
